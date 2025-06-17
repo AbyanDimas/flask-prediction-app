@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Result - House Price Predictor{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 class="display-5 text-primary">
+                <i class="fas fa-chart-line me-3"></i>
+                Prediction Result
+            </h1>
+        </div>
+
+        <!-- Main Result Card -->
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-success text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-dollar-sign me-2"></i>
+                    Estimated House Price
+                </h3>
+            </div>
+            <div class="card-body text-center p-5">
+                <div class="display-3 text-success mb-3">{{ formatted_price }}</div>
+                <div class="h5 text-muted mb-3">
+                    Confidence: 
+                    <span class="badge bg-{{ 'success' if confidence > 0.8 else 'warning' if confidence > 0.6 else 'danger' }}">
+                        {{ "%.1f" | format(confidence * 100) }}%
+                    </span>
+                </div>
+                <p class="lead text-muted">Based on the house features you provided</p>
+            </div>
+        </div>
+
+        <!-- Details Cards -->
+        <div class="row mb-4">
+            <!-- Price Breakdown -->
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-calculator me-2"></i>
+                            Price Breakdown
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Price per sq ft:</span>
+                            <strong>${{ "%.0f" | format(prediction / features.area) }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Total area:</span>
+                            <strong>{{ "{:,}".format(features.area|int) }} sq ft</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Price category:</span>
+                            <strong>
+                                {% if prediction < 100000 %}
+                                    <span class="text-success">Budget</span>
+                                {% elif prediction < 300000 %}
+                                    <span class="text-primary">Affordable</span>
+                                {% elif prediction < 600000 %}
+                                    <span class="text-warning">Mid-range</span>
+                                {% elif prediction < 1000000 %}
+                                    <span class="text-danger">High-end</span>
+                                {% else %}
+                                    <span class="text-dark">Luxury</span>
+                                {% endif %}
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- House Features -->
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-home me-2"></i>
+                            House Features
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-ruler-combined me-1"></i> Area:</span>
+                            <strong>{{ "{:,}".format(features.area|int) }} sq ft</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-bed me-1"></i> Bedrooms:</span>
+                            <strong>{{ features.bedrooms|int }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-bath me-1"></i> Bathrooms:</span>
+                            <strong>{{ features.bathrooms }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-calendar-alt me-1"></i> Age:</span>
+                            <strong>{{ features.age|int }} years</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-map-marker-alt me-1"></i> Location:</span>
+                            <strong>{{ features.location_score }}/10</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confidence Explanation -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    About This Prediction
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <p class="mb-2">
+                            This prediction is based on a Random Forest machine learning model trained on house sales data.
+                            The confidence score indicates how reliable this prediction is based on:
+                        </p>
+                        <ul class="mb-0">
+                            <li>Similarity to training data patterns</li>
+                            <li>Feature value reasonableness</li>
+                            <li>Model performance metrics</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="h1 text-{{ 'success' if confidence > 0.8 else 'warning' if confidence > 0.6 else 'danger' }}">
+                                {% if confidence > 0.8 %}
+                                    <i class="fas fa-check-circle"></i>
+                                {% elif confidence > 0.6 %}
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                {% else %}
+                                    <i class="fas fa-times-circle"></i>
+                                {% endif %}
+                            </div>
+                            <small class="text-muted">
+                                {% if confidence > 0.8 %}
+                                    High Confidence
+                                {% elif confidence > 0.6 %}
+                                    Medium Confidence
+                                {% else %}
+                                    Low Confidence
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="text-center">
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-arrow-left me-2"></i>
+                Make Another Prediction
+            </a>
+            <button onclick="window.print()" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-print me-2"></i>
+                Print Result
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+@media print {
+    .navbar, footer, .btn { display: none !important; }
+    .card { border: 1px solid #000 !important; }
+}
+</style>
+{% endblock %}
+
