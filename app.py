@@ -5,7 +5,6 @@ House Price Predictor Flask Application
 A machine learning web application that predicts house prices
 based on various features using a Random Forest model.
 
-Author: AI Assistant
 Version: 1.0.0
 """
 
