@@ -385,29 +385,9 @@ black app
 
 ### Building the Model
 
-The application comes with a pre-trained Random Forest model, but you can train a new model using the `HousePricePredictor` class found in `app/models/predictor.py`.
-
-### Contributing
-
-Feel free to submit issues and enhancement requests.
-
-1. Fork the repo.
-2. Create a new branch (`git checkout -b feature-branch-name`).
-3. Make your changes and commit (`git commit -am 'Add new feature'`).
-4. Push to the branch (`git push origin feature-branch-name`).
-5. Create a new Pull Request.
-
-## Author
-
-- AI Assistant
-
-## License
- 
-This project is licensed under the MIT License.
-
----
+Aplikasi ini dilengkapi dengan model Random Forest yang telah dilatih sebelumnya, tetapi Anda dapat melatih model baru menggunakan kelas `HousePricePredictor` yang ditemukan di `app/models/predictor.py`.
 
 **Enjoy using the House Price Predictor App!** 🎉
 
-This app is designed for educational purposes. It demonstrates how to integrate machine learning models into a web application and deploy with Docker. Feel free to tweak and extend its capabilities!
+Aplikasi ini dirancang untuk tujuan pendidikan. Aplikasi ini menunjukkan cara mengintegrasikan model pembelajaran mesin ke dalam aplikasi web dan menerapkannya dengan Docker. Jangan ragu untuk mengubah dan memperluas kemampuannya!
 
